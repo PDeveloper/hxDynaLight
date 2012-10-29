@@ -52,7 +52,7 @@ class Main
 		circle.y = 300;
 		
 		// Create the canvas. This defines the size of the rendered area, so this should typically be the size of your stage.
-		canvas = new BitmapData( 400, 400, true, 0x00000000);
+		canvas = new BitmapData( 500, 500, true, 0x00000000);
 		
 		// Create 3 example lights
 		light1 = new Light( LightTool.radialLightMap( 450, 450, 0.9));
@@ -80,8 +80,7 @@ class Main
 		// Uncomment the following to make 100 little cute boxes.
 		//make100RandomBoxes();
 		
-		// Make the canvas and add it to the stage.
-		canvas = new BitmapData( 500, 500, true, 0);
+		// Add the canvas and add it to the stage.
 		Lib.current.addChild( new Bitmap( canvas));
 		
 		// Variable to just move the lights etc.
