@@ -1,0 +1,74 @@
+package com.pdev.lighting;
+import flash.display.BitmapData;
+import flash.geom.Rectangle;
+
+/**
+ * ...
+ * @author P Svilans
+ */
+
+class Light 
+{
+	
+	public var x:Int;
+	public var y:Int;
+	
+	public var radius:Int;
+	
+	// Texture to be used as the light's lightmap, defining which areas are bright. The default is a radial gradient.
+	private var _texture:BitmapData;
+	public var canvas:BitmapData;
+	
+	public var offsetX:Int;
+	public var offsetY:Int;
+	
+	private var _bounds:Rectangle;
+	
+	/**
+	 * Creates a new light (no shit)...
+	 * @param	texture Texture to use as the source for the light's lightmap.
+	 * @param	x x position of the light.
+	 * @param	y y position of the light.
+	 * @param	offsetX Doesn't work, but should be offsetting the position of the texture to the light's position.
+	 * @param	offsetY Doesn't work.
+	 */
+	
+	public function new( texture:BitmapData, x:Int = 0, y:Int = 0, offsetX:Int = 0, offsetY:Int = 0) 
+	{
+		this.x = x;
+		this.y = y;
+		
+		this.texture = texture;
+		
+		this.offsetX = offsetX;
+		this.offsetY = offsetY;
+	}
+	
+	private function get_bounds():Rectangle 
+	{
+		_bounds.x = x - radius;
+		_bounds.y = y - radius;
+		return _bounds;
+	}
+	
+	public var bounds(get_bounds, null):Rectangle;
+	
+	private function get_texture():BitmapData 
+	{
+		return _texture;
+	}
+	
+	private function set_texture(value:BitmapData):BitmapData 
+	{
+		if ( value != null)
+		{
+			canvas = new BitmapData( value.width, value.height, true, 0);
+			radius = canvas.width >> 1;
+			_bounds = canvas.rect;
+		}
+		return _texture = value;
+	}
+	
+	public var texture(get_texture, set_texture):BitmapData;
+	
+}
