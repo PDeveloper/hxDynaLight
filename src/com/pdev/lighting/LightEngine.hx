@@ -37,7 +37,7 @@ class LightEngine
 		lights = new Array<Light>();
 		occluders = new Array<ILightOccluder>();
 		
-		paletteMap = LightTool.paletteMap( [ 0x00FFFFFF, 0xAA000000, 0xEE000000], [ 0, 180, 256]);
+		paletteMap = LightTool.paletteMap( [ 0x00FFFFFF, 0xAA000000, 0xFA000000], [ 0, 180, 256]);
 	}
 	
 	/**
@@ -73,80 +73,85 @@ class LightEngine
 			// Clear the light's canvas.
 			c.fillRect( c.rect, 0x00000000);
 			
-			for ( occluder in occluders)
+			light.init();
+			
+			if ( !light.isAmbient)
 			{
-				// If the occluder is in range of the light.
-				if ( !light.bounds.intersects( occluder.bounds)) continue;
-				
-				// Initialize the occluder. The occluder will draw itself to the light's canvas, as well as return an array of it's edge points.
-				var points = occluder.init( light);
-				
-				var px = occluder.x;
-				var py = occluder.y;
-				// Cycle through edge points and draw a line from that point to the edge of the canvas.
-				for ( point in points)
+				for ( occluder in occluders)
 				{
-					if ( !light.bounds.contains( point.x + px, point.y + py)) continue;
+					// If the occluder is in range of the light.
+					if ( !light.bounds.intersects( occluder.bounds)) continue;
 					
-					var dx = point.x - light.x + px;
-					var dy = point.y - light.y + py;
+					// Initialize the occluder. The occluder will draw itself to the light's canvas, as well as return an array of it's edge points.
+					var points = occluder.init( light);
 					
-					var x:Int;
-					var y:Int;
-					
-					// Boring rectangle clipping math and stuff.
-					if ( dx == 0 && dy == 0) continue;
-					else if ( dx == 0)
+					var px = occluder.x;
+					var py = occluder.y;
+					// Cycle through edge points and draw a line from that point to the edge of the canvas.
+					for ( point in points)
 					{
-						x = r;
-						y = ( dy > 0) ? c.height : 0;
-					}
-					else if ( dy == 0)
-					{
-						x = ( dx > 0) ? c.width : 0;
-						y = r;
-					}
-					else
-					{
-						var m:Float;
-						var b:Float;
+						if ( !light.bounds.contains( point.x + px, point.y + py)) continue;
 						
-						if ( Math.abs( dy) > Math.abs( dx))
+						var dx = point.x - light.x + px;
+						var dy = point.y - light.y + py;
+						
+						var x:Int;
+						var y:Int;
+						
+						// Boring rectangle clipping math and stuff.
+						if ( dx == 0 && dy == 0) continue;
+						else if ( dx == 0)
 						{
-							m = dx / dy;
-							b = ( dx + r) - m * ( dy + r);
-							
-							if ( dy > 0)
-							{
-								y = c.height;
-								x = Std.int( m * ( c.height) + b);
-							}
-							else
-							{
-								y = 0;
-								x = Std.int( b);
-							}
+							x = r;
+							y = ( dy > 0) ? c.height : 0;
+						}
+						else if ( dy == 0)
+						{
+							x = ( dx > 0) ? c.width : 0;
+							y = r;
 						}
 						else
 						{
-							m = dy / dx;
-							b =  ( dy + r) - m * ( dx + r);
+							var m:Float;
+							var b:Float;
 							
-							if ( dx > 0)
+							if ( Math.abs( dy) > Math.abs( dx))
 							{
-								x = c.width;
-								y = Std.int( m * ( c.width) + b);
+								m = dx / dy;
+								b = ( dx + r) - m * ( dy + r);
+								
+								if ( dy > 0)
+								{
+									y = c.height;
+									x = Std.int( m * ( c.height) + b);
+								}
+								else
+								{
+									y = 0;
+									x = Std.int( b);
+								}
 							}
 							else
 							{
-								x = 0;
-								y = Std.int( b);
+								m = dy / dx;
+								b =  ( dy + r) - m * ( dx + r);
+								
+								if ( dx > 0)
+								{
+									x = c.width;
+									y = Std.int( m * ( c.width) + b);
+								}
+								else
+								{
+									x = 0;
+									y = Std.int( b);
+								}
 							}
 						}
+						
+						// Draw the line from the edge point to the edge of the light's canvas.
+						c.drawLine( r + dx, r + dy, x, y, BOUND_COLOUR);
 					}
-					
-					// Draw the line from the edge point to the edge of the light's canvas.
-					c.drawLine( r + dx, r + dy, x, y, BOUND_COLOUR);
 				}
 			}
 			
@@ -195,6 +200,16 @@ class LightEngine
 	public function removeOccluder( occluder:ILightOccluder):Void
 	{
 		occluders.remove( occluder);
+	}
+	
+	public function clear():Void
+	{
+		var L:Int;
+		L = lights.length;
+		for ( i in 0...L) lights.pop();
+		
+		L = occluders.length;
+		for ( i in 0...L) occluders.pop();
 	}
 	
 	public function lightIterator():Iterator<Light>

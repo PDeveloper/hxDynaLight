@@ -10,8 +10,11 @@ import flash.geom.Rectangle;
 class Light 
 {
 	
+	public var isAmbient:Bool;
+	
 	public var x:Int;
 	public var y:Int;
+	public var rotation:Float;
 	
 	public var radius:Int;
 	
@@ -37,11 +40,23 @@ class Light
 	{
 		this.x = x;
 		this.y = y;
+		this.rotation = 0.0;
 		
 		this.texture = texture;
 		
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
+		
+		isAmbient = false;
+	}
+	
+	/**
+	 * Initialize this light before it's about to be drawn.
+	 */
+	
+	public function init():Void
+	{
+		
 	}
 	
 	private function get_bounds():Rectangle 

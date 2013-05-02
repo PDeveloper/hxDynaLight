@@ -18,6 +18,7 @@ class ShadowCircle implements ILightOccluder
 	
 	public var x:Int;
 	public var y:Int;
+	public var rotation:Float;
 	
 	private var _radius:Int;
 	

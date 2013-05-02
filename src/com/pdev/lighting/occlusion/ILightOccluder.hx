@@ -15,6 +15,7 @@ interface ILightOccluder
 	
 	public var x:Int;
 	public var y:Int;
+	public var rotation:Float;
 	public var bounds(get_bounds, null):Rectangle;
 	public function init( light:Light):SLL<PointInt>;
 	

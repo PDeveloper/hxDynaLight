@@ -3,7 +3,10 @@ import com.pdev.lighting.Light;
 import com.pdev.lighting.LightEngine;
 import com.pdev.lighting.PointInt;
 import de.polygonal.ds.SLL;
+import de.polygonal.ds.SLL;
 import flash.display.BitmapData;
+import flash.geom.Matrix;
+import flash.geom.Point;
 import flash.geom.Rectangle;
 
 /**
@@ -19,6 +22,7 @@ class ShadowSegment implements ILightOccluder
 	
 	public var x:Int;
 	public var y:Int;
+	public var rotation:Float;
 	
 	// Points are stored in a single-linked-list, since we only ever need to iterate through them in one way.
 	private var points:SLL<PointInt>;
@@ -28,6 +32,9 @@ class ShadowSegment implements ILightOccluder
 	public var isClockwise:Bool;
 	
 	private var _bounds:Rectangle;
+	
+	public var shadowDistance:Float;
+	public var constant:Bool;
 
 	public function new( x:Int = 0, y:Int = 0) 
 	{
@@ -37,6 +44,8 @@ class ShadowSegment implements ILightOccluder
 		points = new SLL<PointInt>();
 		isClosed = false;
 		isClockwise = false;
+		
+		shadowDistance = 1 / 0; //Set infinity as default
 		
 		_bounds = new Rectangle();
 	}
@@ -66,6 +75,22 @@ class ShadowSegment implements ILightOccluder
 	public function init( light:Light):SLL<PointInt>
 	{
 		var e:SLL<PointInt> = new SLL<PointInt>();
+		
+		// Transform points
+		var matrix:Matrix = new Matrix();
+		matrix.rotate( rotation);
+		var points:SLL<PointInt> = new SLL<PointInt>();
+		var p:Point = new Point();
+		
+		for ( point in this.points)
+		{
+			p.x = point.x;
+			p.y = point.y;
+			
+			p = matrix.transformPoint( p);
+			
+			points.append( new PointInt( Std.int( p.x), Std.int( p.y)));
+		}
 		
 		// Declare vars (no shit)
 		// Vector to the current point.
@@ -198,21 +223,32 @@ class ShadowSegment implements ILightOccluder
 	
 	private function get_bounds():Rectangle 
 	{
+		// Transform points
+		var matrix:Matrix = new Matrix();
+		matrix.rotate( rotation);
+		
+		var point:Point = new Point();
+		
 		var v = false;
 		for ( p in points)
 		{
+			point.x = p.x;
+			point.y = p.y;
+			
+			point = matrix.transformPoint( point);
+			
 			if ( v)
 			{
-				_bounds.left = Math.min( p.x + x, _bounds.left);
-				_bounds.right = Math.max( p.x + x, _bounds.right);
-				_bounds.top = Math.min( p.y + y, _bounds.top);
-				_bounds.bottom = Math.max( p.y + y, _bounds.bottom);
+				_bounds.left = Math.min( point.x + x, _bounds.left);
+				_bounds.right = Math.max( point.x + x, _bounds.right);
+				_bounds.top = Math.min( point.y + y, _bounds.top);
+				_bounds.bottom = Math.max( point.y + y, _bounds.bottom);
 			}
 			else
 			{
 				v = true;
-				_bounds.x = p.x + x;
-				_bounds.y = p.y + y;
+				_bounds.x = point.x + x;
+				_bounds.y = point.y + y;
 				_bounds.width = 0;
 				_bounds.height = 0;
 			}

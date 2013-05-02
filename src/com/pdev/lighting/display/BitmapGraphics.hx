@@ -8,7 +8,7 @@ import flash.display.BitmapData;
 
 class BitmapGraphics 
 {
-
+	
 	/**
 	 * Draw a line to a bitmapData.
 	 * @param	canvas The target BitmapData.
@@ -18,7 +18,7 @@ class BitmapGraphics
 	 * @param	y1 Ending y coordinate.
 	 * @param	color Color to draw.
 	 */
-
+	
 	public static inline function drawLine( canvas:BitmapData, x0:Int, y0:Int, x1:Int, y1:Int, color:UInt=0):Void
 	{
 		var yLonger:Bool = false;
@@ -70,6 +70,8 @@ class BitmapGraphics
 				i += incrementVal;
 			}
 		}
+		
+		canvas.setPixel32( x1, y1, color);
 	}
 	
 	/**

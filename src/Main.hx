@@ -75,10 +75,10 @@ class Main
 		engine.addLight( light1);
 		engine.addLight( light2);
 		engine.addLight( light3);
-		engine.addOccluder( circle);
+		//engine.addOccluder( circle);
 		
 		// Uncomment the following to make 100 little cute boxes.
-		//make100RandomBoxes();
+		make100RandomBoxes();
 		
 		// Add the canvas and add it to the stage.
 		Lib.current.addChild( new Bitmap( canvas));
