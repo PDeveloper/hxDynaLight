@@ -11,3 +11,6 @@ Polygonal Datastructures. If you are using the .swc, don't worry about this, if 
 `haxelib install polygonal-ds`
 
 From commandline.
+
+### License
+This library is under the very very very strict license of informing me when you use it in a project and sending me a link to it so the world can see! :)
