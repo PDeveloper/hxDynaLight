@@ -32,7 +32,7 @@ class LightTool
 		var grMatrix:Matrix = new Matrix();
 		grMatrix.createGradientBox( width, height);
 		
-		var grCols:Array<UInt> = [ 0, 0];
+		var grCols:Array<Int> = [ 0, 0];
 		var grAlphas:Array<Float> = [  brightness, 0];
 		var grRatio:Array<Int> = [ 0, 255];
 		
@@ -52,16 +52,16 @@ class LightTool
 	 * @param	ratios An array of ratios at which to interpolate the colours. If no array is provided, an array of [ 0, 256] is assumed.
 	 * @return A palette map array of colours.
 	 */
-	public static function paletteMap( colours:Array<UInt>, ratios:Array<Int> = null):Array<UInt>
+	public static function paletteMap( colours:Array<Int>, ratios:Array<Int> = null):Array<Int>
 	{
 		var i:Int;
-		var hex:UInt;
+		var hex:Int;
 		
 		if ( ratios == null) ratios = [ 0, 256];
 		
 		var t:Float;
 		
-		var palette:Array<UInt> = new Array<UInt>();
+		var palette:Array<Int> = new Array<Int>();
 		palette[0] = colours[0];
 		
 		var c1:Dynamic;
@@ -111,12 +111,12 @@ class LightTool
 		return palette;
 	}
 	
-	public static inline function ARGB2HEX( a:Int, r:Int, g:Int, b:Int):UInt
+	public static inline function ARGB2HEX( a:Int, r:Int, g:Int, b:Int):Int
 	{
 		return a << 24 | r << 16 | g << 8 | b;
 	}
 	
-	public static inline function HEXToARGB( hex:UInt):Dynamic
+	public static inline function HEXToARGB( hex:Int):Dynamic
 	{
 		var rgbObj:Dynamic = {
 			a: (hex >> 24) & 0xFF,

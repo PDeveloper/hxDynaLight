@@ -30,7 +30,7 @@ class LightEngine
 	/**
 	 * The palette map to use to render lights.
 	 */
-	public var paletteMap:Array<UInt>;
+	public var paletteMap:Array<Int>;
 
 	public function new() 
 	{

@@ -12,7 +12,7 @@ class DirectionalLight extends Light
 {
 	
 	public var width:Float;
-
+	
 	public function new( texture:BitmapData, width:Float = 80.0) 
 	{
 		super( texture);
