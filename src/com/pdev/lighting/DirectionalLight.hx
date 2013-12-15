@@ -11,12 +11,15 @@ import flash.display.BitmapData;
 class DirectionalLight extends Light
 {
 	
+	public var centreRadius:Int;
+	
 	public var width:Float;
 	
 	public function new( texture:BitmapData, width:Float = 80.0) 
 	{
 		super( texture);
 		
+		this.centreRadius = 3;
 		this.width = width;
 	}
 	
@@ -32,13 +35,13 @@ class DirectionalLight extends Light
 		var r0 = rotation - pi2 + 0.05;
 		var r1 = rotation + pi2 - 0.05;
 		
-		canvas.drawArc( mx, my, 3, r1, r0, 0xFFFF0000);
+		canvas.drawArc( mx, my, centreRadius, r1, r0, 0xFFFF0000);
 		
 		var vx = Math.cos( rotation);
 		var vy = Math.sin( rotation);
 		
-		var rx:Int = Std.int( vx * 3.0);
-		var ry:Int = Std.int( vy * 3.0);
+		var rx:Int = Std.int( vx * centreRadius);
+		var ry:Int = Std.int( vy * centreRadius);
 		
 		var x0:Int = Std.int( vx * r - vy * width);
 		var y0:Int = Std.int( vy * r + vx * width);

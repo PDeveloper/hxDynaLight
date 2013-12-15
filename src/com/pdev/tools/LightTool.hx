@@ -32,7 +32,11 @@ class LightTool
 		var grMatrix:Matrix = new Matrix();
 		grMatrix.createGradientBox( width, height);
 		
+		#if flash
+		var grCols:Array<UInt> = [ 0, 0];
+		#else
 		var grCols:Array<Int> = [ 0, 0];
+		#end
 		var grAlphas:Array<Float> = [  brightness, 0];
 		var grRatio:Array<Int> = [ 0, 255];
 		

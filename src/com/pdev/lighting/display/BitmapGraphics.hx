@@ -262,4 +262,9 @@ class BitmapGraphics
 		}
 	}
 	
+	public static inline function fastFill( canvas:BitmapData, x0:Int, y0:Int, color:Int=0):Void
+	{
+		
+	}
+	
 }

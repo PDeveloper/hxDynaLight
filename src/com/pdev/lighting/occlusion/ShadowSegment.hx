@@ -3,7 +3,6 @@ import com.pdev.lighting.Light;
 import com.pdev.lighting.LightEngine;
 import com.pdev.lighting.PointInt;
 import de.polygonal.ds.SLL;
-import de.polygonal.ds.SLL;
 import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Point;

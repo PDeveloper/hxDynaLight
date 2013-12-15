@@ -37,7 +37,7 @@ class LightEngine
 		lights = new Array<Light>();
 		occluders = new Array<ILightOccluder>();
 		
-		paletteMap = LightTool.paletteMap( [ 0x00FFFFFF, 0xAA000000, 0xFA000000], [ 0, 180, 256]);
+		paletteMap = LightTool.paletteMap( [ 0x00FFFFFF, 0xAA000000, 0xF8000000], [ 0, 180, 256]);
 	}
 	
 	/**
@@ -62,21 +62,21 @@ class LightEngine
 		for ( light in lights)
 		{
 			//Check if a light is in view.
-			if ( !light.bounds.intersects( frame)) continue;
+			if ( !light.bounds.intersects( frame) || !light.isEnabled) continue;
 			
 			var r = light.radius;
 			
-			var c = light.canvas;
-			// Lock the light's canvas. Just in case, shouldn't make a difference if you don't have the light's canvas attached to a Bitmap object.
-			c.lock();
-			
-			// Clear the light's canvas.
-			c.fillRect( c.rect, 0x00000000);
-			
-			light.init();
-			
 			if ( !light.isAmbient)
 			{
+				var c = light.canvas;
+				// Lock the light's canvas. Just in case, shouldn't make a difference if you don't have the light's canvas attached to a Bitmap object.
+				c.lock();
+				
+				// Clear the light's canvas.
+				c.fillRect( c.rect, 0x00000000);
+				
+				light.init();
+				
 				for ( occluder in occluders)
 				{
 					// If the occluder is in range of the light.
@@ -153,27 +153,41 @@ class LightEngine
 						c.drawLine( r + dx, r + dy, x, y, BOUND_COLOUR);
 					}
 				}
+				
+				// Draw the light's bounds, this speeds things up, because then floodFill() won't be filling in irrelevant areas.
+				c.drawCircle( r, r, r, BOUND_COLOUR);
+				// Flood fill the light.
+				//c.floodFill( r, r, LIGHT_COLOUR);
+				// Remove all bound coloured areas.s
+				//c.threshold( c, c.rect, new Point(), "==", BOUND_COLOUR, 0x00000000, 0xFFFFFFFF, false);
+				
+				c.unlock();
+				// Area which to draw on the main canvas.
+				var fClip = frame.intersection( light.bounds);
+				// Area which to copy from the light's canvas.
+				var lClip = fClip.clone();
+				fClip.x -= frame.x;
+				fClip.y -= frame.y;
+				lClip.x -= light.x - r;
+				lClip.y -= light.y - r;
+				
+				// Copy the light's canvas to the main canvas.
+				canvas.copyPixels( light.texture, lClip, new Point( fClip.x, fClip.y), c, new Point( lClip.x, lClip.y), true);
 			}
-			
-			// Draw the light's bounds, this speeds things up, because then floodFill() won't be filling in irrelevant areas.
-			c.drawCircle( r, r, r, BOUND_COLOUR);
-			// Flood fill the light.
-			c.floodFill( r, r, LIGHT_COLOUR);
-			// Remove all bound coloured areas.s
-			c.threshold( c, c.rect, new Point(), "==", BOUND_COLOUR, 0x00000000, 0xFFFFFFFF, false);
-			// Area which to draw on the main canvas.
-			var fClip = frame.intersection( light.bounds);
-			// Area which to copy from the light's canvas.
-			var lClip = fClip.clone();
-			fClip.x -= frame.x;
-			fClip.y -= frame.y;
-			lClip.x -= light.x - r;
-			lClip.y -= light.y - r;
-			
-			c.unlock();
-			
-			// Copy the light's canvas to the main canvas.
-			canvas.copyPixels( light.texture, lClip, new Point( fClip.x, fClip.y), c, new Point( lClip.x, lClip.y), true);
+			else
+			{
+				// Area which to draw on the main canvas.
+				var fClip = frame.intersection( light.bounds);
+				// Area which to copy from the light's canvas.
+				var lClip = fClip.clone();
+				fClip.x -= frame.x;
+				fClip.y -= frame.y;
+				lClip.x -= light.x - r;
+				lClip.y -= light.y - r;
+				
+				// Copy the light's canvas to the main canvas.
+				canvas.copyPixels( light.texture, lClip, new Point( fClip.x, fClip.y), null, null, true);
+			}
 		}
 		
 		// Convert all lightmaps to real colours.

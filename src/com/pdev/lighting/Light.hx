@@ -27,6 +27,8 @@ class Light
 	
 	private var _bounds:Rectangle;
 	
+	private var _isEnabled:Bool;
+	
 	/**
 	 * Creates a new light (no shit)...
 	 * @param	texture Texture to use as the source for the light's lightmap.
@@ -38,6 +40,8 @@ class Light
 	
 	public function new( texture:BitmapData, x:Int = 0, y:Int = 0, offsetX:Int = 0, offsetY:Int = 0) 
 	{
+		_isEnabled = true;
+		
 		this.x = x;
 		this.y = y;
 		this.rotation = 0.0;
@@ -57,6 +61,11 @@ class Light
 	public function init():Void
 	{
 		
+	}
+	
+	public function setEnabled( enabled:Bool):Void
+	{
+		_isEnabled = enabled;
 	}
 	
 	private function get_bounds():Rectangle 
@@ -85,5 +94,12 @@ class Light
 	}
 	
 	public var texture(get_texture, set_texture):BitmapData;
+	
+	function get_isEnabled():Bool 
+	{
+		return _isEnabled;
+	}
+	
+	public var isEnabled(get_isEnabled, null):Bool;
 	
 }
