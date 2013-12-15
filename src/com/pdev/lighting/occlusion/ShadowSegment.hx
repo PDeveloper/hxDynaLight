@@ -35,10 +35,11 @@ class ShadowSegment implements ILightOccluder
 	public var shadowDistance:Float;
 	public var constant:Bool;
 
-	public function new( x:Int = 0, y:Int = 0) 
+	public function new( x:Int = 0, y:Int = 0, rotation:Float = 0.0 ) 
 	{
 		this.x = x;
 		this.y = y;
+		this.rotation = rotation;
 		
 		points = new SLL<PointInt>();
 		isClosed = false;
@@ -71,24 +72,25 @@ class ShadowSegment implements ILightOccluder
 	 * @param	light The light that is currently being processed.
 	 * @return A list of edge points.
 	 */
-	public function init( light:Light):SLL<PointInt>
+	public function init( light:Light ):SLL<PointInt>
 	{
 		var e:SLL<PointInt> = new SLL<PointInt>();
 		
 		// Transform points
 		var matrix:Matrix = new Matrix();
-		matrix.rotate( rotation);
+		matrix.rotate( rotation );
 		var points:SLL<PointInt> = new SLL<PointInt>();
 		var p:Point = new Point();
 		
-		for ( point in this.points)
+		for ( point in this.points )
 		{
 			p.x = point.x;
 			p.y = point.y;
 			
-			p = matrix.transformPoint( p);
+			p = matrix.transformPoint( p );
 			
-			points.append( new PointInt( Std.int( p.x), Std.int( p.y)));
+			
+			points.append( new PointInt( Std.int( p.x ), Std.int( p.y ) ) );
 		}
 		
 		// Declare vars (no shit)
@@ -114,14 +116,14 @@ class ShadowSegment implements ILightOccluder
 		var n = c.next;
 		
 		// Define the vectors to the current and next point of the polygon.
-		toC = new PointInt( c.val.x + x - light.x, c.val.y + y - light.y);
-		toN = new PointInt( n.val.x + x - light.x, n.val.y + y - light.y);
+		toC = new PointInt( c.val.x + x - light.x, c.val.y + y - light.y );
+		toN = new PointInt( n.val.x + x - light.x, n.val.y + y - light.y );
 		
 		// Get the next cross product.
-		next = toC.cross( toN);
+		next = toC.cross( toN );
 		
 		// If next is positive, the edge (from first point to the second point) is facing away from the light, so draw the edge.
-		if ( next > 0 || !isClosed)
+		if ( next > 0 || !isClosed )
 		{
 			canvas.drawLine( c.val.x - light.x + r + x,
 							c.val.y - light.y + r + y,
@@ -131,7 +133,7 @@ class ShadowSegment implements ILightOccluder
 		}
 		
 		// If we want the series of points to define a polygon, and not a series of line segments.
-		if ( isClosed)
+		if ( isClosed )
 		{
 			// Get the last point of the list (technically the previous point of the current (first) point)
 			var p = points.tail;
@@ -166,7 +168,7 @@ class ShadowSegment implements ILightOccluder
 		c = n;
 		
 		// While we have more nodes to examine...
-		while ( c.hasNext())
+		while ( c.hasNext() )
 		{
 			// Get the next node.
 			n = c.next;
@@ -189,7 +191,7 @@ class ShadowSegment implements ILightOccluder
 			}
 			
 			// If prev and next are both either negative or both positive, the current point is an edge point.
-			if ( prev * next >= 0) e.append( c.val);
+			if ( prev * next >= 0 ) e.append( c.val );
 			
 			// Advance all vars to the next point.
 			prev = -next;

@@ -113,7 +113,7 @@ class Main
 		light1.y = Std.int( Math.sin( i * 1.3) * 150 + 250);
 		light2.x = Std.int( Math.cos( i * 1.1) * 50 + 350);
 		light2.y = Std.int( Math.sin( i) * 150 + 300);
-		i += 0.05;
+		i += 0.01;
 		
 		// Render yo.
 		engine.render( canvas, 0, 0);

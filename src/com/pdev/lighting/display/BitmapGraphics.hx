@@ -19,7 +19,7 @@ class BitmapGraphics
 	 * @param	color Color to draw.
 	 */
 	
-	public static inline function drawLine( canvas:BitmapData, x0:Int, y0:Int, x1:Int, y1:Int, color:Int=0):Void
+	public static inline function drawLine( canvas:BitmapData, x0:Int, y0:Int, x1:Int, y1:Int, color:Int = 0 ):Void
 	{
 		var yLonger:Bool = false;
 		var incrementVal:Int, endVal:Int;
@@ -83,7 +83,7 @@ class BitmapGraphics
 	 * @param	color	Color to draw.
 	 */
 	
-	public static inline function drawCircle( canvas:BitmapData, x0:Int, y0:Int, radius:Int, color:Int=0):Void
+	public static inline function drawCircle( canvas:BitmapData, x0:Int, y0:Int, radius:Int, color:Int = 0 ):Void
 	{
 		var error:Int = -radius;
 		var x:Int = radius;
@@ -132,7 +132,7 @@ class BitmapGraphics
 	 * @param	color	Color to draw.
 	 */
 	
-	public static inline function drawArc( canvas:BitmapData, x0: Int, y0: Int, radius: Int, r1:Float, r2:Float, color:Int=0):Void
+	public static inline function drawArc( canvas:BitmapData, x0: Int, y0: Int, radius: Int, r1:Float, r2:Float, color:Int = 0 ):Void
 	{
 		var x: Int, y: Int, g: Int, dx: Int, dxdy: Int;
 		var Dxa: Int, Dya: Int, Dxb: Int, Dyb: Int;
